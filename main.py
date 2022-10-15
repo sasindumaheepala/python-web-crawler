@@ -11,11 +11,11 @@ class Crawler:
 		# Creates CSV Database file if non-existent
 		datafile = Path(database)
 		if not datafile.is_file():
-			with open(database, 'w') as file:
+			with open(database, 'w', encoding="utf8") as file:
 				file.write('id,url,title,description,response\n')
 		self.path_to_database = database
 		self.database = []
-		with open(self.path_to_database, "r") as file:
+		with open(self.path_to_database, "r", encoding="utf8") as file:
 			csv_reader = csv.DictReader(file)
 			line_count = 0
 			for row in csv_reader:
@@ -58,17 +58,17 @@ class Crawler:
 			if autoinsert and page.status_code not in exclude:
 				if exists:
 					updated = []
-					with open(self.path_to_database, "r") as file:
+					with open(self.path_to_database, "r", encoding="utf8") as file:
 						reader = csv.reader(file)
 						updated = list(reader)
 					updated[exists] = [exists, URL, title, description, page.status_code]
-					with open(self.path_to_database, 'w') as file:
+					with open(self.path_to_database, 'w', encoding="utf8") as file:
 						writer = csv.writer(file)
 						writer.writerows(updated)
 					maxnew += 1
 						
 				else:
-					with open(self.path_to_database, "a") as file:
+					with open(self.path_to_database, "a", encoding="utf8") as file:
 						fieldnames = ['id', 'url', 'title', 'description', 'response']
 						csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
 						if exists:
@@ -107,7 +107,7 @@ class Crawler:
 				print(f"Crawled: {current}. Inserted: {(len(self.database)-original)}/{max_original}. Total in database: {len(self.database)}.")
 
 	def display_data(self):
-		with open(self.path_to_database, "r") as file:
+		with open(self.path_to_database, "r", encoding="utf8") as file:
 			csv_reader = csv.DictReader(file)
 			line_count = 0
 			for row in csv_reader:
@@ -195,6 +195,7 @@ while action == "2":
 				total += 1
 		if len(output) == 1:
 			print("\033[93mNo results found.\033[0m\n")
-	except:
+	except Exception as e:
+		print(e)
 		continue
 		
