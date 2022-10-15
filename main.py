@@ -160,22 +160,26 @@ os.system("clear")
 print("Choose what you want to do:\n1 - Use web crawler\n2 - Use web crawler and search engine\n1 or 2")
 action = input()
 
-if action == "1":
-	os.system("clear")
-	print("Input what websites you want to start the crawler with. Input as many as you want, click enter with a blank line if you are done.")
-	websites = []
-	while True:
-		next = input()
-		if next.strip() != "":
-			websites.append(format_URL(next))
-			continue
+while action == "1":
+	try:
+		os.system("clear")
+		print("Input what websites you want to start the crawler with. Input as many as you want, click enter with a blank line if you are done.")
+		websites = []
+		while True:
+			next = input()
+			if next.strip() != "":
+				websites.append(format_URL(next))
+				continue
+			break
+			
+		database = input("Choose what to call you database. This will be stored as a csv file: {your database name}.csv.\n") + ".csv"
+		spider = Crawler(database)
+		spider.crawl(websites, expand=True, exclude=[404], maxnew=int(input("How many webpages would you like to crawl? ")))
+		if input("Would you like you display crawler database? (Y/n) ").lower() == "y":
+			spider.display_data()
 		break
-		
-	database = input("Choose what to call you database. This will be stored as a csv file: {your database name}.csv.\n") + ".csv"
-	spider = Crawler(database)
-	spider.crawl(websites, expand=True, exclude=[404], maxnew=int(input("How many webpages would you like to crawl? ")))
-	if input("Would you like you display crawler database? (Y/n) ").lower() == "y":
-		spider.display_data()
+	except Exception as e:
+		print(e)
 
 while action == "2":
 	try:
@@ -198,4 +202,3 @@ while action == "2":
 	except Exception as e:
 		print(e)
 		continue
-		
